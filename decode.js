@@ -13,9 +13,15 @@ function decode(pbf) {
     e = Math.pow(10, 6);
     lengths = null;
 
+    var end = undefined;
+    if (pbf.pos > 0) {
+        // if position in pbf is > 0, assume geobuf is a message contained in a larger protobuf
+        end = pbf.readVarint() + pbf.pos;
+    }
+
     keys = [];
     values = [];
-    var obj = pbf.readFields(readDataField, {});
+    var obj = pbf.readFields(readDataField, {}, end);
     keys = null;
 
     return obj;

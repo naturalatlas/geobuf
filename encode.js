@@ -20,6 +20,7 @@ function encode(obj, pbf) {
     keysNum = 0;
     dim = 0;
     e = 1;
+    var initialPos = pbf.pos;
 
     analyze(obj);
 
@@ -38,7 +39,13 @@ function encode(obj, pbf) {
 
     keys = null;
 
-    return pbf.finish();
+    if (initialPos === 0) {
+        // geobuf is self-contained (return buffer)
+        return pbf.finish();
+    } else {
+        // geobuf is being encoded as part of larger protobuf (return unfinished protobuf)
+        return pbf;
+    }
 }
 
 function analyze(obj) {
